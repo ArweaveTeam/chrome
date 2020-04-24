@@ -332,11 +332,12 @@ export const convertUrlParamsToLaunchOpts = (req: IHTTPRequest): ILaunchOptions 
   const parsedKeepalive = _.parseInt(keepaliveQuery as string);
   const keepalive = _.isNaN(parsedKeepalive) ? undefined : parsedKeepalive;
   const parsedIgnoreDefaultArgs = parseIgnoreDefaultArgs(urlParts.query);
-
+  debug(`Converted Url Params: ${JSON.stringify(urlParts.query)}`);
+  debug(`isHeadless: ${isHeadless}`);
   return {
     args: !_.isEmpty(args) ? args : DEFAULT_LAUNCH_ARGS,
     blockAds: !_.isUndefined(blockAds) || DEFAULT_BLOCK_ADS,
-    headless: isHeadless,
+    headless: false,
     ignoreDefaultArgs: parsedIgnoreDefaultArgs,
     ignoreHTTPSErrors: !_.isUndefined(ignoreHTTPSErrors) || DEFAULT_IGNORE_HTTPS_ERRORS,
     keepalive,
