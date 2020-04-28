@@ -270,6 +270,32 @@ export const getRoutes = ({
     }));
   }
 
+  router.post('/cookieless', jsonParser, jsParser, asyncWebHandler(async (req: Request, res: Response) => {
+    const isJson = typeof req.body === 'object';
+    const code = isJson ? req.body.code : req.body;
+    const context = isJson ? req.body.context : {};
+
+    return puppeteerProvider.runHTTP({
+      //after: screencastAfter,
+      //before: screenCastBefore,
+      code,
+      context,
+      flags: [
+        //'--enable-usermedia-screen-capturing',
+        //'--allow-http-screen-capture',
+        //'--auto-select-desktop-capture-source=browserless-screencast',
+        '--load-extension=' + path.join(__dirname, '..', 'extensions', 'cookies_extension'),
+        '--disable-extensions-except=' + path.join(__dirname, '..', 'extensions', 'cookies_extension'),
+      ],
+      headless: false,
+      ignoreDefaultArgs: [
+        '--enable-automation',
+      ],
+      req,
+      res,
+    });
+  }));
+
   if (!disabledFeatures.includes(Features.SCREENSHOT_ENDPOINT)) {
     enableAPIGet && router.get('/screenshot',
       queryValidation(screenshotSchema),
